@@ -9,7 +9,7 @@
       "error",
       5
     ],
-    "no-underscore-dangle": ["error", { "allow": ["_getJSONData"] }],
+    
     "sonarjs/prefer-object-literal": "off",
     "mocha/no-setup-in-describe": "off",
     "indent": [
