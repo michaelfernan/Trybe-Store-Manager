@@ -17,12 +17,14 @@ describe('Product Controller', function () {
       const req = httpMocks.createRequest();
       const res = httpMocks.createResponse();
 
+      // @ts-ignore
       sinon.stub(productService, 'getAllProducts').resolves(mockProducts);
 
       await productController.listAllProducts(req, res);
 
       expect(res.statusCode).to.equal(200);
-      expect(res._getJSONData()).to.deep.equal(mockProducts);
+      // eslint-disable-next-line no-underscore-dangle
+      expect(JSON.parse(res._getData())).to.deep.equal(mockProducts);
     });
 
     it('deve tratar erros ao buscar produtos', async function () {
@@ -35,7 +37,8 @@ describe('Product Controller', function () {
       await productController.listAllProducts(req, res);
 
       expect(res.statusCode).to.equal(500);
-      expect(res._getJSONData()).to.deep.equal({ error: 'Erro ao listar produtos.' });
+      // eslint-disable-next-line no-underscore-dangle
+      expect(JSON.parse(res._getData())).to.deep.equal({ error: 'Erro ao listar produtos.' });
     });
   });
 });
