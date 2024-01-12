@@ -1,6 +1,5 @@
 const chai = require('chai');
 const sinon = require('sinon');
-const httpMocks = require('node-mocks-http');
 const mockProducts = require('../../mock');
 const productService = require('../../../src/services/productService');
 const productController = require('../../../src/controllers/productController');
@@ -14,22 +13,40 @@ describe('Product Controller', function () {
 
   describe('listAllProducts', function () {
     it('deve retornar todos os produtos', async function () {
-      const req = httpMocks.createRequest();
-      const res = httpMocks.createResponse();
-
-      // @ts-ignore
+      const req = {};
+      const res = {
+        statusCode: 0, 
+        data: null, 
+        status(code) {
+          this.statusCode = code;
+          return this;
+        },
+        json(data) {
+          this.data = data;
+        },
+      }; 
       sinon.stub(productService, 'getAllProducts').resolves(mockProducts);
 
       await productController.listAllProducts(req, res);
 
       expect(res.statusCode).to.equal(200);
-      // eslint-disable-next-line no-underscore-dangle
-      expect(JSON.parse(res._getData())).to.deep.equal(mockProducts);
+      expect(res.data).to.deep.equal(mockProducts);
     });
 
     it('deve tratar erros ao buscar produtos', async function () {
-      const req = httpMocks.createRequest();
-      const res = httpMocks.createResponse();
+      const req = {}; 
+      const res = {
+        statusCode: 0, 
+        data: null, 
+        status(code) {
+          this.statusCode = code;
+          return this;
+        },
+        json(data) {
+          this.data = data;
+        },
+      }; 
+
       const error = new Error('Erro ao buscar produtos');
 
       sinon.stub(productService, 'getAllProducts').rejects(error);
@@ -37,8 +54,7 @@ describe('Product Controller', function () {
       await productController.listAllProducts(req, res);
 
       expect(res.statusCode).to.equal(500);
-      // eslint-disable-next-line no-underscore-dangle
-      expect(JSON.parse(res._getData())).to.deep.equal({ error: 'Erro ao listar produtos.' });
+      expect(res.data).to.deep.equal({ error: 'Erro ao listar produtos.' });
     });
   });
 });
