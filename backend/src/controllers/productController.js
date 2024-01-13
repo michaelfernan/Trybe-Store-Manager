@@ -2,13 +2,10 @@ const productService = require('../services/productService');
 
 const listAllProducts = async (req, res) => {
   try {
-    console.log('chamou aqui');
     const products = await productService.getAllProducts();
     console.log(products);
     res.status(200).json(products);
   } catch (error) {
-    console.log('chamou aqui', error);
-
     res.status(500).json({ error: 'Erro ao listar produtos.' });
   }
 };
