@@ -1,6 +1,5 @@
 const chai = require('chai');
 const sinon = require('sinon');
-const httpMocks = require('node-mocks-http');
 
 const { expect } = chai;
 const sinonChai = require('sinon-chai');
@@ -20,10 +19,11 @@ describe('Sales Controller', function () {
 
   describe('listAllSales', function () {
     it('should return all sales', async function () {
-      const req = httpMocks.createRequest();
-      const res = httpMocks.createResponse();
-      res.status = sinon.stub().returns(res);
-      res.json = sinon.stub().returns(res);
+      const req = {}; // Mock req object
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.stub().returnsThis(),
+      };
 
       sinon.stub(salesService, 'getAllSales').resolves(mockSales);
 
@@ -36,10 +36,11 @@ describe('Sales Controller', function () {
 
   describe('getSaleById', function () {
     it('should return a specific sale by ID', async function () {
-      const req = httpMocks.createRequest({ params: { id: 1 } });
-      const res = httpMocks.createResponse();
-      res.status = sinon.stub().returns(res);
-      res.json = sinon.stub().returns(res);
+      const req = { params: { id: 1 } }; // Mock req object
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.stub().returnsThis(),
+      };
 
       sinon.stub(salesService, 'getSaleById').withArgs(1).resolves([mockSales[0]]);
 
@@ -50,10 +51,11 @@ describe('Sales Controller', function () {
     });
 
     it('should return 404 for non-existing sale', async function () {
-      const req = httpMocks.createRequest({ params: { id: 999 } });
-      const res = httpMocks.createResponse();
-      res.status = sinon.stub().returns(res);
-      res.json = sinon.stub().returns(res);
+      const req = { params: { id: 999 } }; // Mock req object
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.stub().returnsThis(),
+      };
 
       sinon.stub(salesService, 'getSaleById').withArgs(999).resolves([]);
 
