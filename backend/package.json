@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node .",
     "dev": "nodemon --inspect=0.0.0.0:9229 .",
+    "test": "mocha",
     "test:mocha": "mocha",
     "test:coverage": "nyc mocha",
     "test:mutation": "stryker run",
