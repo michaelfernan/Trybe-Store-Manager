@@ -51,4 +51,43 @@ describe('Product Controller', function () {
       expect(res.data).to.deep.equal({ error: 'Erro ao listar produtos.' });
     });
   });
+  describe('getProductById', function () {
+    it('deve retornar um produto pelo ID', async function () {
+      const mockProduct = { id: 1, name: 'Produto Teste', price: 10 };
+      const productId = 1;
+
+      req.params = { id: productId };
+      sandbox.stub(productService, 'getProductById').resolves(mockProduct);
+
+      await productController.getProductById(req, res);
+
+      expect(res.statusCode).to.equal(200);
+      expect(res.data).to.deep.equal(mockProduct);
+    });
+
+    it('deve retornar 404 se o produto não for encontrado', async function () {
+      const productId = 999; 
+
+      req.params = { id: productId };
+      sandbox.stub(productService, 'getProductById').resolves(null);
+
+      await productController.getProductById(req, res);
+
+      expect(res.statusCode).to.equal(404);
+      expect(res.data).to.deep.equal({ message: 'Product not found' });
+    });
+
+    it('deve tratar erros ao buscar produto pelo ID', async function () {
+      const productId = 1;
+      const error = new Error('Erro ao buscar produto');
+
+      req.params = { id: productId };
+      sandbox.stub(productService, 'getProductById').rejects(error);
+
+      await productController.getProductById(req, res);
+
+      expect(res.statusCode).to.equal(500);
+      expect(res.data).to.deep.equal({ error: 'Erro ao buscar produto.' });
+    });
+  });
 });
