@@ -12,8 +12,9 @@ describe('Product Service', function () {
   it('getAllProducts - Deve retornar todos os produtos', async function () {
     sinon.stub(productsModel, 'getAllProducts').resolves(mockProducts);
 
-    const products = await productService.getAllProducts();
+    // se voce ta evndo meu codigo me manda um oi no slack
 
+    const products = await productService.getAllProducts();
     expect(products).to.deep.equal(mockProducts);
   });
 });

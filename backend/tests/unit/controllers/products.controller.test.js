@@ -66,7 +66,7 @@ describe('Product Controller', function () {
     });
 
     it('deve retornar 404 se o produto não for encontrado', async function () {
-      const productId = 999; 
+      const productId = 999; // um ID que não existe
 
       req.params = { id: productId };
       sandbox.stub(productService, 'getProductById').resolves(null);
