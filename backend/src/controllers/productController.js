@@ -12,9 +12,6 @@ const listAllProducts = async (req, res) => {
 
 const getProductById = async (req, res) => {
   const productId = req.params.id;
-
-  // Optional: Add validation for productId here if needed
-
   try {
     const product = await productService.getProductById(productId);
     if (product) {
@@ -27,5 +24,17 @@ const getProductById = async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar produto.' });
   }
 };
+const createProduct = async (req, res) => {
+  const { name } = req.body;
+  console.log('body', req.body);
+  try {
+    console.log('name', name);
+    const newProduct = await productService.createProduct(name);
+    res.status(201).json(newProduct);
+  } catch (error) {
+    console.error('Error creating product:', error);
+    res.status(500).json({ error: 'Erro ao criar produto.' });
+  }
+};
 
-module.exports = { listAllProducts, getProductById };
+module.exports = { listAllProducts, getProductById, createProduct };

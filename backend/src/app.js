@@ -2,11 +2,13 @@ const express = require('express');
 
 const app = express();
 
-const productRoutes = require('./routers/productRoutes'); 
+app.use(express.json());
 
+const productRoutes = require('./routers/routes');
+ 
 app.use(productRoutes);
 
-// não remova esse endpoint, é para o avaliador funcionar
+// Não remova esse endpoint, é para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.json({ status: 'Store Manager UP!' });
 });
