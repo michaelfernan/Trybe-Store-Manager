@@ -19,56 +19,65 @@ describe('Middleware validateSales', function () {
     productExistsStub.restore();
   });
 
-  it('should return 400 for invalid sales data - missing productId', function (done) {
-    const invalidSales = [
-      { productId: 1, quantity: 5 },
-      { quantity: 3 }, 
-      { productId: 2, quantity: -1 },
-    ];
+  // Teste para verificar se 'productId' está faltando
+  it('should return 400 for missing productId', function (done) {
+    const salesData = [{ quantity: 5 }];
 
     chai.request(app)
       .post('/sales')
-      .send(invalidSales)
+      .send(salesData)
       .end(function (err, res) {
         assert.equal(err, null);
-        assert.isTrue(res.status === 400); 
-        assert.equal(res.body.message, 'Invalid sales data'); 
+        assert.equal(res.status, 400);
+        assert.equal(res.body.message, '"productId" is required');
         done();
       });
   });
 
-  it('should return 400 for invalid sales data - negative quantity', function (done) {
-    const invalidSales = [
-      { productId: 1, quantity: 5 },
-      { productId: 2, quantity: -1 }, 
-    ];
+  // Teste para verificar se 'quantity' está faltando
+  it('should return 400 for missing quantity', function (done) {
+    const salesData = [{ productId: 1 }];
 
     chai.request(app)
       .post('/sales')
-      .send(invalidSales)
+      .send(salesData)
       .end(function (err, res) {
         assert.equal(err, null);
-        assert.isTrue(res.status === 400); 
-        assert.equal(res.body.message, 'Invalid sales data'); 
+        assert.equal(res.status, 400);
+        assert.equal(res.body.message, '"quantity" is required');
         done();
       });
   });
 
-  it('should return 404 for non-existing products', function (done) {
-    productExistsStub.returns(false); 
-
-    const invalidSales = [
-      { productId: 1, quantity: 5 },
-      { productId: 999, quantity: 3 }, 
-    ];
+  // Teste para verificar se 'quantity' é menor ou igual a zero
+  it('should return 422 for quantity less than or equal to 0', function (done) {
+    const salesData = [{ productId: 1, quantity: 0 }];
 
     chai.request(app)
       .post('/sales')
-      .send(invalidSales)
+      .send(salesData)
       .end(function (err, res) {
         assert.equal(err, null);
-        assert.isTrue(res.status === 404); 
-        assert.equal(res.body.message, 'Product not found'); 
+        assert.equal(res.status, 422);
+        assert.equal(res.body.message, '"quantity" must be greater than or equal to 1');
+        done();
+      });
+  });
+
+  // Teste para verificar se 'productId' não existe
+  it('should return 404 for non-existing productId', function (done) {
+    productExistsStub.withArgs(1).returns(true);
+    productExistsStub.withArgs(999).returns(false);
+
+    const salesData = [{ productId: 999, quantity: 3 }];
+
+    chai.request(app)
+      .post('/sales')
+      .send(salesData)
+      .end(function (err, res) {
+        assert.equal(err, null);
+        assert.equal(res.status, 404);
+        assert.equal(res.body.message, 'Product not found');
         done();
       });
   });
