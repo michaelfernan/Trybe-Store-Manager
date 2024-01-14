@@ -50,7 +50,10 @@ const insertSales = async (saleId, productId, quantity) => {
     const query = `
       INSERT INTO sales_products (sale_id, product_id, quantity)
       VALUES (?, ?, ?)`;
+      
     await connection.execute(query, [saleId, productId, quantity]);
+    console.log('result model', productId, quantity);
+    return { productId, quantity };
   } catch (error) {
     throw new Error(`Erro ao inserir venda: ${error.message}`);
   } finally {

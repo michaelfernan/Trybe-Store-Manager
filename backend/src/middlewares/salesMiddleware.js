@@ -42,6 +42,7 @@ const validateSales = async (req, res, next) => {
 
     return next();
   } catch (error) {
+    console.error('Error in validateSales middleware:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };

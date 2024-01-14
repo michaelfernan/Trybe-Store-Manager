@@ -14,25 +14,16 @@ const getSaleById = async (id) => {
 
 const createSale = async (itemsSold) => {
   const saleId = await SalesModel.insertSalesDate();
- 
+  console.log(itemsSold);
   const saleItems = await Promise.all(
     itemsSold.map(async (item) => SalesModel
       .insertSales(saleId, item.productId, item.quantity)),
   );
+  console.log('service', saleId, saleItems);
   return {
     id: saleId,
     itemsSold: saleItems,
   };
 };
-const insertSales = async (req, res) => {
-  try {
-    const itemsSold = req.body;
-    const newSale = await createSale(itemsSold); 
-    res.status(201).json(newSale); 
-  } catch (error) {
-    console.error('Error creating sale:', error);
-    res.status(500).json({ error: 'Erro ao criar venda.' });
-  }
-};
 
-module.exports = { getAllSales, getSaleById, insertSales };
+module.exports = { getAllSales, getSaleById, createSale };
