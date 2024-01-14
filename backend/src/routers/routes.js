@@ -35,6 +35,23 @@ router.put('/products/:id', async (req, res) => {
   }
 });
 
+router.delete('/products/:id', async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id, 10);
+    const existingProduct = await productModel.getProductById(productId);
+
+    if (!existingProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    await productModel.deleteProduct(productId);
+    
+    res.status(204).end();
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).json({ error: 'Erro ao deletar o produto.' });
+  }
+});
 router.post('/sales', midSales, salesController.insertSales);
 
 module.exports = router;
