@@ -9,7 +9,6 @@ chai.use(sinonChai);
 const salesService = require('../../../src/services/salesService');
 const salesController = require('../../../src/controllers/salesController');
 
-// Substitua com o seu mockSales real
 const mockSales = [{ saleId: 1, date: '2021-09-09T04:54:29.000Z', productId: 1, quantity: 2 }];
 
 describe('Sales Controller', function () {
@@ -62,6 +61,22 @@ describe('Sales Controller', function () {
       await salesController.getSaleById(req, res);
 
       expect(res.status).to.have.been.calledWith(404);
+    });
+  });
+  describe('insertSales', function () {
+    it('should insert a sale successfully', async function () {
+      const req = {
+        body: [{ productId: 1, quantity: 10 }],
+      };
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.stub().returnsThis(),
+      };
+      const fakeResponse = { id: 1, itemsSold: req.body };
+  
+      sinon.stub(salesService, 'insertSales').resolves(fakeResponse);
+  
+      await salesController.insertSales(req, res);
     });
   });
 });

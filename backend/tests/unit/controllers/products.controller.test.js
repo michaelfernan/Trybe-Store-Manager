@@ -66,7 +66,7 @@ describe('Product Controller', function () {
     });
 
     it('deve retornar 404 se o produto não for encontrado', async function () {
-      const productId = 999; // um ID que não existe
+      const productId = 999; 
 
       req.params = { id: productId };
       sandbox.stub(productService, 'getProductById').resolves(null);
@@ -88,6 +88,30 @@ describe('Product Controller', function () {
 
       expect(res.statusCode).to.equal(500);
       expect(res.data).to.deep.equal({ error: 'Erro ao buscar produto.' });
+    });
+  });
+
+  describe('createProduct', function () {
+    it('deve criar um produto com sucesso', async function () {
+      const mockProduct = { name: 'Produto Novo' };
+      req.body = mockProduct;
+      sandbox.stub(productService, 'createProduct').resolves(mockProduct);
+
+      await productController.createProduct(req, res);
+
+      expect(res.statusCode).to.equal(201);
+      expect(res.data).to.deep.equal(mockProduct);
+    });
+
+    it('deve tratar erros ao criar um produto', async function () {
+      const error = new Error('Erro ao criar produto');
+      req.body = { name: 'Produto Novo' };
+      sandbox.stub(productService, 'createProduct').rejects(error);
+
+      await productController.createProduct(req, res);
+
+      expect(res.statusCode).to.equal(500);
+      expect(res.data).to.deep.equal({ error: 'Erro ao criar produto.' });
     });
   });
 });

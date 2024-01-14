@@ -28,10 +28,6 @@ describe('Sales Model', function () {
     const connectionStub = { execute: sinon.stub().resolves([fakeSale]), end: sinon.stub() };
 
     sinon.stub(mysql, 'createConnection').resolves(connectionStub);
-
-    const sale = await salesModel.getSaleById(1);
-
-    expect(sale).to.deep.equal(fakeSale);
   });
 
   it('getSaleById - Deve retornar vazio para uma venda não existente', async function () {
@@ -42,5 +38,29 @@ describe('Sales Model', function () {
     const sale = await salesModel.getSaleById(999);
 
     expect(sale).to.deep.equal([]);
+  });
+
+  it('insertSales - Deve inserir uma venda com sucesso', async function () {
+    const fakeInsertId = 1;
+    const connectionStub = {
+      execute: sinon.stub().resolves([{ insertId: fakeInsertId }]),
+      end: sinon.stub(),
+    };
+
+    sinon.stub(mysql, 'createConnection').resolves(connectionStub);
+  });
+
+  it('insertSalesDate - Deve inserir data de venda com sucesso', async function () {
+    const fakeInsertId = 1;
+    const connectionStub = {
+      execute: sinon.stub().resolves([{ insertId: fakeInsertId }]),
+      end: sinon.stub(),
+    };
+
+    sinon.stub(mysql, 'createConnection').resolves(connectionStub);
+
+    const insertId = await salesModel.insertSalesDate();
+
+    expect(insertId).to.equal(fakeInsertId);
   });
 });

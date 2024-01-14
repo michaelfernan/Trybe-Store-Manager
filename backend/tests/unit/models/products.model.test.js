@@ -47,4 +47,35 @@ describe('Product Model', function () {
       expect(product).to.be.equal(undefined);
     });
   });
+  describe('createProduct', function () {
+    it('deve criar um novo produto', async function () {
+      const fakeResult = { insertId: 1 };
+      connectionStub.query.resolves([fakeResult]);
+      const productName = 'New Product';
+
+      const newProduct = await productModel.createProduct(productName);
+
+      expect(newProduct).to.deep.equal({ id: 1, name: productName });
+    });
+  });
+
+  describe('productExists', function () {
+    it('deve retornar true se o produto existir', async function () {
+      connectionStub.query.resolves([[{ id: 1 }]]);
+      const productId = 1;
+
+      const exists = await productModel.productExists(productId);
+
+      expect(exists).to.equal(true);
+    });
+
+    it('deve retornar false se o produto não existir', async function () {
+      connectionStub.query.resolves([[]]);
+      const productId = 999;
+
+      const exists = await productModel.productExists(productId);
+
+      expect(exists).to.equal(false);
+    });
+  });
 });

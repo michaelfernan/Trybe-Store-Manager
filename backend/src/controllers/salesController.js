@@ -28,7 +28,19 @@ const getSaleById = async (req, res) => {
   }
 };
 
+const insertSales = async (req, res) => {
+  try {
+    const itemsSold = req.body;
+    const newSale = await salesService.createSale(itemsSold);
+    res.status(201).json(newSale);
+  } catch (error) {
+    console.error('Error creating sale:', error);
+    res.status(500).json({ error: 'Erro ao criar venda.' });
+  }
+};
+
 module.exports = {
   listAllSales,
   getSaleById,
+  insertSales,
 };

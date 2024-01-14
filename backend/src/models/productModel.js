@@ -33,4 +33,37 @@ const createProduct = async (name) => {
   }
 };
 
-module.exports = { getAllProducts, getProductById, createProduct };
+const productExists = async (productId) => {
+  const connection = await mysql.createConnection(dbConfig);
+  try {
+    const [rows] = await connection.query(
+      'SELECT id FROM products WHERE id = ? LIMIT 1',
+      [productId],
+    );
+    return rows.length > 0;
+  } finally {
+    connection.end();
+  }
+};
+
+const updateProduct = async (id, name) => {
+  const connection = await mysql.createConnection(dbConfig);
+
+  const query = 'UPDATE products SET name = ? WHERE id = ?';
+  const query2 = 'SELECT * FROM products WHERE id = ?';
+  await connection.execute(query, [name, id]);
+  const [[result]] = await connection.execute(query2, [id]);
+  return result;
+};
+
+const deleteProduct = async (id) => {
+  const connection = await mysql.createConnection(dbConfig);
+
+  const query = 'DELETE FROM products WHERE id = ?';
+  const [result] = await connection.execute(query, [id]);
+  return result;
+};
+
+module.exports = { 
+  getAllProducts, getProductById, createProduct, productExists, updateProduct, deleteProduct,
+};
