@@ -32,7 +32,6 @@ const insertSales = async (req, res) => {
   try {
     const itemsSold = req.body;
     const newSale = await salesService.createSale(itemsSold);
-    console.log('controler', newSale);
     res.status(201).json(newSale);
   } catch (error) {
     console.error('Error creating sale:', error);

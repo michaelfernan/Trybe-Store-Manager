@@ -74,7 +74,7 @@ describe('Sales Controller', function () {
       };
       const fakeResponse = { id: 1, itemsSold: req.body };
   
-      sinon.stub(salesService, 'insertSales').resolves(fakeResponse);
+      sinon.stub(salesService, 'createSale').resolves(fakeResponse);
   
       await salesController.insertSales(req, res);
     });
