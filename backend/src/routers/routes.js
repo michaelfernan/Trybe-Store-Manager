@@ -4,7 +4,6 @@ const salesController = require('../controllers/salesController');
 const mid = require('../middlewares/productsMiddlewares');
 const midSales = require('../middlewares/salesMiddleware');
 const productModel = require('../models/productModel');
-// const productExist = require('../middlewares/productsExist');
 
 const router = express.Router();
 
